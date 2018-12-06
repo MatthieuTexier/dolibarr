@@ -111,7 +111,7 @@ class Products extends DolibarrApi
         $socid = DolibarrApiAccess::$user->societe_id ? DolibarrApiAccess::$user->societe_id : '';
 
         $sql = "SELECT t.rowid, t.ref, t.ref_ext";
-        $sql.= " FROM ".MAIN_DB_PREFIX."product as t INNER JOIN ".MAIN_DB_PREFIX."llx_product_extrafields as te on te.fk_object = t.rowid";
+        $sql.= " FROM ".MAIN_DB_PREFIX."product as t INNER JOIN ".MAIN_DB_PREFIX."product_extrafields as te on te.fk_object = t.rowid";
         if ($category > 0)
         {
             $sql.= ", ".MAIN_DB_PREFIX."categorie_product as c";
