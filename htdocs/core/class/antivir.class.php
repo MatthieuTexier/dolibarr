@@ -2,7 +2,7 @@
 /* Copyright (C) 2000-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2003      Jean-Louis Bergamo   <jlb@j1b.org>
  * Copyright (C) 2004-2009 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2005-2009 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2009 Regis Houssin        <regis.houssin@inodbox.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,8 +40,11 @@ class AntiVir
 	 */
 	public $errors = array();
 
-	var $output;
-	
+	/**
+	 * @var string Used to return message
+	 */
+	public $output;
+
 	/**
      * @var DoliDB Database handler.
      */
@@ -57,6 +60,7 @@ class AntiVir
 		$this->db=$db;
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Scan a file with antivirus.
 	 *  This function runs the command defined in setup. This antivirus command must return 0 if OK.
@@ -65,9 +69,9 @@ class AntiVir
 	 *	@param	string	$file		File to scan
 	 *	@return	int					<0 if KO (-98 if error, -99 if virus), 0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function dol_avscan_file($file)
 	{
+        // phpcs:enable
 		global $conf;
 
 		$return = 0;

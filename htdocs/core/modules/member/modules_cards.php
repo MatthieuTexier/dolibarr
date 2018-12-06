@@ -2,7 +2,7 @@
 /* Copyright (C) 2003-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2009 Laurent Destailleur	<eldy@users.sourceforge.net>
  * Copyright (C) 2004	   Eric Seigne			<eric.seigne@ryxeo.com>
- * Copyright (C) 2005-2009 Regis Houssin		<regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2009 Regis Houssin		<regis.houssin@inodbox.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@ class ModelePDFCards
 	public $error='';
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Return list of active generation modules
 	 *
@@ -47,9 +48,9 @@ class ModelePDFCards
 	 *	@param	integer	$maxfilenamelength	Max length of value to show
 	 *	@return	array						List of templates
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function liste_modeles($db,$maxfilenamelength=0)
 	{
+        // phpcs:enable
 		global $conf;
 
 		$type='member';
@@ -63,6 +64,7 @@ class ModelePDFCards
 }
 
 
+// phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 /**
  *	Cree un fichier de cartes de visites en fonction du modele de ADHERENT_CARDS_ADDON_PDF
  *
@@ -74,9 +76,9 @@ class ModelePDFCards
  *	@param	string		$template		pdf generenate document class to use default 'standard'
  *	@return int							<0 if KO, >0 if OK
  */
-// phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 function members_card_pdf_create($db, $arrayofmembers, $modele, $outputlangs, $outputdir='', $template='standard')
 {
+    // phpcs:enable
 	global $conf,$langs;
 	$langs->load("members");
 

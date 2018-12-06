@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2003		Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2005-2006	Laurent Destailleur		<eldy@users.sourceforge.net>
- * Copyright (C) 2012		Regis Houssin			<regis.houssin@capnetworks.com>
+ * Copyright (C) 2012		Regis Houssin			<regis.houssin@inodbox.com>
  * Copyright (C) 2012       Marcos García           <marcosgdf@gmail.com>
  * Copyright (C) 2014-2015  Alexandre Spangaro		<aspangaro.dolibarr@gmail.com>
  * Copyright (C) 2015  		Benoit Bruchard			<benoitb21@gmail.com>
@@ -64,6 +64,7 @@ class html_cerfafr extends ModeleDon
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Write the object to document file to disk
 	 *
@@ -72,9 +73,9 @@ class html_cerfafr extends ModeleDon
 	 *  @param	string		$currency		Currency code
 	 *	@return	int             			>0 if OK, <0 if KO
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function write_file($don,$outputlangs,$currency='')
 	{
+        // phpcs:enable
 		global $user,$conf,$langs,$mysoc;
 
 		$now=dol_now();
@@ -82,12 +83,8 @@ class html_cerfafr extends ModeleDon
 
 		if (! is_object($outputlangs)) $outputlangs=$langs;
 
-		$outputlangs->load("main");
-		$outputlangs->load("dict");
-		$outputlangs->load("companies");
-		$outputlangs->load("bills");
-		$outputlangs->load("products");
-		$outputlangs->load("donations");
+		// Load traductions files requiredby by page
+		$outputlangs->loadLangs(array("main", "dict", "companies", "bills", "products", "donations"));
 
 		$currency = !empty($currency) ? $currency : $conf->currency;
 

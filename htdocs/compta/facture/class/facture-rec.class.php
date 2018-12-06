@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2003-2005	Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2004-2015	Laurent Destailleur		<eldy@users.sourceforge.net>
- * Copyright (C) 2009-2012	Regis Houssin			<regis.houssin@capnetworks.com>
+ * Copyright (C) 2009-2012	Regis Houssin			<regis.houssin@inodbox.com>
  * Copyright (C) 2010-2011	Juanjo Menent			<jmenent@2byte.es>
  * Copyright (C) 2012       Cedric Salvador      <csalvador@gpcsolutions.fr>
  * Copyright (C) 2013       Florian Henry		  	<florian.henry@open-concept.pro>
@@ -59,9 +59,16 @@ class FactureRec extends CommonInvoice
 	 */
 	public $fk_element='fk_facture';
 
+	/**
+	 * @var string String with name of icon for myobject. Must be the part after the 'object_' into object_myobject.png
+	 */
 	public $picto='bill';
 
+	/**
+	 * @var int Entity
+	 */
 	public $entity;
+
 	public $number;
 	public $date;
 	public $amount;
@@ -448,14 +455,15 @@ class FactureRec extends CommonInvoice
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Recupere les lignes de factures predefinies dans this->lines
 	 *
 	 *  @return     int         1 if OK, < 0 if KO
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_lines()
 	{
+        // phpcs:enable
 		$this->lines=array();
 
 		// Retreive all extrafield for line
@@ -1000,8 +1008,8 @@ class FactureRec extends CommonInvoice
 
 		$error=0;
 
-		$langs->load("bills");
-		$langs->load('main');
+		// Load translation files required by the page
+        $langs->loadLangs(array("main","bills"));
 
 		$nb_create=0;
 
@@ -1190,6 +1198,7 @@ class FactureRec extends CommonInvoice
 		return $this->LibStatut($this->frequency?1:0, $this->suspended, $mode, $alreadypaid, empty($this->type)?0:$this->type);
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Return label of a status
 	 *
@@ -1200,9 +1209,9 @@ class FactureRec extends CommonInvoice
 	 *	@param		int		$type			Type invoice
 	 *	@return     string        			Label of status
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function LibStatut($recur, $status, $mode=0, $alreadypaid=-1, $type=0)
 	{
+        // phpcs:enable
 		global $langs;
 		$langs->load('bills');
 
@@ -1221,7 +1230,7 @@ class FactureRec extends CommonInvoice
 				else return $langs->trans("Draft");
 			}
 		}
-		if ($mode == 1)
+		elseif ($mode == 1)
 		{
 			$prefix='Short';
 			if ($recur)
@@ -1235,7 +1244,7 @@ class FactureRec extends CommonInvoice
 				else return $langs->trans("Draft");
 			}
 		}
-		if ($mode == 2)
+		elseif ($mode == 2)
 		{
 			if ($recur)
 			{
@@ -1248,7 +1257,7 @@ class FactureRec extends CommonInvoice
 				else return img_picto($langs->trans('Draft'),'statut0').' '.$langs->trans('Draft');
 			}
 		}
-		if ($mode == 3)
+		elseif ($mode == 3)
 		{
 			if ($recur)
 			{
@@ -1262,7 +1271,7 @@ class FactureRec extends CommonInvoice
 				else return img_picto($langs->trans('Draft'),'statut0');
 			}
 		}
-		if ($mode == 4)
+		elseif ($mode == 4)
 		{
 			$prefix='';
 			if ($recur)
@@ -1276,7 +1285,7 @@ class FactureRec extends CommonInvoice
 				else return img_picto($langs->trans('Draft'),'statut0').' '.$langs->trans('Draft');
 			}
 		}
-		if ($mode == 5 || $mode == 6)
+		elseif ($mode == 5 || $mode == 6)
 		{
 			$prefix='';
 			if ($mode == 5) $prefix='Short';

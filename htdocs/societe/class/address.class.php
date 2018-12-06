@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2002-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2014 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2005-2011 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2011 Regis Houssin        <regis.houssin@inodbox.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,10 +39,20 @@ class Address
 	public $id;
 
 	public $type;
-	public $label;
+
+	/**
+     * @var string Address label
+     */
+    public $label;
+
 	public $socid;
 	public $name;
+
+	/**
+	 * @var string Address
+	 */
 	public $address;
+
 	public $zip;
 	public $town;
 	public $country_id;
@@ -128,7 +138,6 @@ class Address
 				$this->db->rollback();
 				return -2;
 			}
-
 		}
 		else
 		{
@@ -234,6 +243,7 @@ class Address
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Charge depuis la base toutes les adresses d'une societe
 	 *
@@ -241,9 +251,9 @@ class Address
 	 *  @param  User	$user        Objet de l'utilisateur
 	 *  @return int 			     >0 si ok, <0 si ko
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_lines($socid, $user=null)
 	{
+        // phpcs:enable
 		global $langs, $conf;
 
 		$sql = 'SELECT rowid, nom as name, client, fournisseur';
@@ -328,6 +338,7 @@ class Address
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Charge depuis la base l'objet adresse
 	 *
@@ -335,9 +346,9 @@ class Address
 	 *  @param  User	$user       Objet de l'utilisateur
 	 *  @return int 				>0 si ok, <0 si ko
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_address($id, $user=null)
 	{
+        // phpcs:enable
 		global $langs;
 		global $conf;
 
@@ -484,7 +495,6 @@ class Address
 			}
 
 			$this->db->free($result);
-
 		}
 		else
 		{
@@ -508,9 +518,19 @@ class AddressLine
 
 	public $date_creation;
 	public $date_modification;
-	public $label;
+
+	/**
+     * @var string stock movements label
+     */
+    public $label;
+
 	public $name;
+
+	/**
+	 * @var string Address
+	 */
 	public $address;
+
 	public $zip;
 	public $town;
 	public $country_id;

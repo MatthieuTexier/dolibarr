@@ -240,7 +240,6 @@ class AdvanceTargetingMailing extends CommonObject
 				$this->datec = $this->db->jdate($obj->datec);
 				$this->fk_user_mod = $obj->fk_user_mod;
 				$this->tms = $this->db->jdate($obj->tms);
-
 			}
 			$this->db->free($resql);
 
@@ -254,15 +253,16 @@ class AdvanceTargetingMailing extends CommonObject
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Load object in memory from the database
 	 *
 	 *  @param	int		$id    Id object
 	 *  @return int          	<0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_by_mailing($id=0)
 	{
+        // phpcs:enable
 		global $langs;
 		$sql = "SELECT";
 		$sql.= " t.rowid,";
@@ -303,7 +303,6 @@ class AdvanceTargetingMailing extends CommonObject
 				$this->datec = $this->db->jdate($obj->datec);
 				$this->fk_user_mod = $obj->fk_user_mod;
 				$this->tms = $this->db->jdate($obj->tms);
-
 			}
 			$this->db->free($resql);
 
@@ -320,6 +319,7 @@ class AdvanceTargetingMailing extends CommonObject
 
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Load object in memory from the database
 	 *
@@ -327,9 +327,9 @@ class AdvanceTargetingMailing extends CommonObject
 	 *  @param	string	$type_element	Type target
 	 *  @return int          			<0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_by_element($id=0, $type_element='mailing')
 	{
+        // phpcs:enable
 		global $langs;
 		$sql = "SELECT";
 		$sql.= " t.rowid,";
@@ -370,7 +370,6 @@ class AdvanceTargetingMailing extends CommonObject
 				$this->datec = $this->db->jdate($obj->datec);
 				$this->fk_user_mod = $obj->fk_user_mod;
 				$this->tms = $this->db->jdate($obj->tms);
-
 			}
 			$this->db->free($resql);
 
@@ -546,15 +545,16 @@ class AdvanceTargetingMailing extends CommonObject
 
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 * Load object in memory from database
 	 *
 	 * 	@param		array		$arrayquery	All element to Query
 	 * 	@return		int			<0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function query_thirdparty($arrayquery)
 	{
+        // phpcs:enable
 		global $langs,$conf;
 
 		$sql = "SELECT";
@@ -661,14 +661,10 @@ class AdvanceTargetingMailing extends CommonObject
 							$sqlwhere[]= " (te.".$key." LIKE '".$arrayquery['options_'.$key]."')";
 						}
 					}
-
 				}
-
-
 			}
 
 			if (count($sqlwhere)>0)	$sql.= " WHERE ".implode(" AND ",$sqlwhere);
-
 		}
 
 
@@ -700,6 +696,7 @@ class AdvanceTargetingMailing extends CommonObject
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 * Load object in memory from database
 	 *
@@ -707,9 +704,9 @@ class AdvanceTargetingMailing extends CommonObject
 	 * 	@param		int			$withThirdpartyFilter	add contact with tridparty filter
 	 * 	@return		int			<0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function query_contact($arrayquery, $withThirdpartyFilter = 0)
 	{
+        // phpcs:enable
 		global $langs,$conf;
 
 		$sql = "SELECT";
@@ -799,7 +796,6 @@ class AdvanceTargetingMailing extends CommonObject
 							$sqlwhere[]= " (te.".$key." LIKE '".$arrayquery['options_'.$key.'_cnct']."')";
 						}
 					}
-
 				}
 
 				if (! empty($withThirdpartyFilter)) {
@@ -965,7 +961,6 @@ class AdvanceTargetingMailing extends CommonObject
 			if (count($return_sql_not_like)>0) {
 				$return_sql_criteria .= ' AND (' . implode (' AND ', $return_sql_not_like).')';
 			}
-
 		}else {
 			$return_sql_criteria .= $column_to_test . ' LIKE \''.$this->db->escape($criteria).'\'';
 		}

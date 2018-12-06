@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2010-2012	Regis Houssin		<regis.houssin@capnetworks.com>
+/* Copyright (C) 2010-2012	Regis Houssin		<regis.houssin@inodbox.com>
  * Copyright (C) 2011-2012	Laurent Destailleur	<eldy@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@ abstract class ActionsCardCommon
      * @var DoliDB Database handler.
      */
     public $db;
-    
+
     var $dirmodule;
     var $targetmodule;
     var $canvas;
@@ -41,12 +41,12 @@ abstract class ActionsCardCommon
 	var $tpl = array();
 	//! Object container
 	var $object;
-	
+
 	/**
 	 * @var string Error code (or message)
 	 */
 	public $error='';
-	
+
 
 	/**
 	 * @var string[] Error codes (or messages)
@@ -70,6 +70,7 @@ abstract class ActionsCardCommon
     	$this->object = $object;
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *    Assign custom values for canvas (for example into this->tpl to be used by templates)
 	 *
@@ -78,9 +79,9 @@ abstract class ActionsCardCommon
 	 *    @param	string	$ref		Ref of object
 	 *    @return	void
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function assign_values(&$action, $id=0, $ref='')
     {
+        // phpcs:enable
         global $conf, $langs, $user, $mysoc, $canvas;
         global $form, $formadmin, $formcompany;
 
@@ -257,7 +258,6 @@ abstract class ActionsCardCommon
                     $this->tpl['localtax'].= '</td><tr>';
                 }
             }
-
         }
         else
         {
@@ -370,15 +370,16 @@ abstract class ActionsCardCommon
         }
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
     /**
      *  Assign POST values into object
      *
      *	@param		string		$action		Action string
      *  @return		string					HTML output
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
     private function assign_post($action)
     {
+        // phpcs:enable
         global $langs, $mysoc;
 
         $this->object->id					=	$_POST["socid"];

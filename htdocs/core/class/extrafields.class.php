@@ -4,7 +4,7 @@
  * Copyright (C) 2004       Sebastien Di Cintio     <sdicintio@ressource-toi.org>
  * Copyright (C) 2004       Benoit Mortier          <benoit.mortier@opensides.be>
  * Copyright (C) 2009-2012  Laurent Destailleur     <eldy@users.sourceforge.net>
- * Copyright (C) 2009-2012  Regis Houssin           <regis.houssin@capnetworks.com>
+ * Copyright (C) 2009-2012  Regis Houssin           <regis.houssin@inodbox.com>
  * Copyright (C) 2013       Florian Henry           <forian.henry@open-concept.pro>
  * Copyright (C) 2015       Charles-Fr BENKE        <charles.fr@benke.fr>
  * Copyright (C) 2016       Raphaël Doursenaud      <rdoursenaud@gpcsolutions.fr>
@@ -95,7 +95,7 @@ class ExtraFields
 	 * @var string Error code (or message)
 	 */
 	public $error='';
-	
+
 	var $errno;
 
 
@@ -247,8 +247,8 @@ class ExtraFields
 				$typedb='varchar';
 				$lengthdb='255';
 			} elseif (($type=='select') || ($type=='sellist') || ($type=='radio') ||($type=='checkbox') ||($type=='chkbxlst')){
-				$typedb='text';
-				$lengthdb='';
+				$typedb='varchar';
+				$lengthdb='255';
 			} elseif ($type=='link') {
 				$typedb='int';
 				$lengthdb='11';
@@ -293,6 +293,7 @@ class ExtraFields
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	/**
 	 *	Add description of a new optional attribute
 	 *
@@ -316,9 +317,9 @@ class ExtraFields
 	 *  @param  string  		$enabled  		Condition to have the field enabled or not
 	 *  @return	int								<=0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	private function create_label($attrname, $label='', $type='', $pos=0, $size=0, $elementtype='member', $unique=0, $required=0, $param='', $alwayseditable=0, $perms='', $list='-1', $help='', $default='', $computed='',$entity='', $langfile='', $enabled='1')
 	{
+        // phpcs:enable
 		global $conf,$user;
 
 		if ($elementtype == 'thirdparty') $elementtype='societe';
@@ -463,6 +464,7 @@ class ExtraFields
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	/**
 	 *	Delete description of an optional attribute
 	 *
@@ -470,9 +472,9 @@ class ExtraFields
 	 *  @param  string	$elementtype        Element type ('member', 'product', 'thirdparty', ...)
 	 *  @return int              			< 0 if KO, 0 if nothing is done, 1 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	private function delete_label($attrname, $elementtype='member')
 	{
+        // phpcs:enable
 		global $conf;
 
 		if ($elementtype == 'thirdparty') $elementtype='societe';
@@ -553,8 +555,8 @@ class ExtraFields
 				$typedb='varchar';
 				$lengthdb='255';
 			} elseif (($type=='select') || ($type=='sellist') || ($type=='radio') || ($type=='checkbox') || ($type=='chkbxlst')) {
-				$typedb='text';
-				$lengthdb='';
+				$typedb='varchar';
+				$lengthdb='255';
 			} elseif ($type == 'html') {
 				$typedb='text';
 			} elseif ($type=='link') {
@@ -612,6 +614,7 @@ class ExtraFields
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	/**
 	 *  Modify description of personalized attribute
 	 *
@@ -636,9 +639,9 @@ class ExtraFields
      *  @param  int     $totalizable        Is extrafield totalizable on list
      *  @return	int							<=0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	private function update_label($attrname,$label,$type,$size,$elementtype,$unique=0,$required=0,$pos=0,$param='',$alwayseditable=0,$perms='',$list='0',$help='',$default='',$computed='',$entity='',$langfile='',$enabled='1', $totalizable=0)
 	{
+        // phpcs:enable
 		global $conf, $user;
 		dol_syslog(get_class($this)."::update_label ".$attrname.", ".$label.", ".$type.", ".$size.", ".$elementtype.", ".$unique.", ".$required.", ".$pos.", ".$alwayseditable.", ".$perms.", ".$list.", ".$default.", ".$computed.", ".$entity.", ".$langfile.", ".$enabled.", ".$totalizable);
 
@@ -672,11 +675,22 @@ class ExtraFields
 				$params='';
 			}
 
-			$sql_del = "DELETE FROM ".MAIN_DB_PREFIX."extrafields";
-			$sql_del.= " WHERE name = '".$attrname."'";
-			$sql_del.= " AND entity = ".($entity===''?$conf->entity:$entity);
-			$sql_del.= " AND elementtype = '".$elementtype."'";
-
+			if ($entity === '' || $entity != '0')
+			{
+				// We dont want on all entities, we delete all and current
+				$sql_del = "DELETE FROM ".MAIN_DB_PREFIX."extrafields";
+				$sql_del.= " WHERE name = '".$attrname."'";
+				$sql_del.= " AND entity IN (0, ".($entity===''?$conf->entity:$entity).")";
+				$sql_del.= " AND elementtype = '".$elementtype."'";
+			}
+			else
+			{
+				// We want on all entities ($entities = '0'), we delete on all only (we keep setup specific to each entity)
+				$sql_del = "DELETE FROM ".MAIN_DB_PREFIX."extrafields";
+				$sql_del.= " WHERE name = '".$attrname."'";
+				$sql_del.= " AND entity = 0";
+				$sql_del.= " AND elementtype = '".$elementtype."'";
+			}
 			$resql1=$this->db->query($sql_del);
 
 			$sql = "INSERT INTO ".MAIN_DB_PREFIX."extrafields(";
@@ -748,6 +762,7 @@ class ExtraFields
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 * 	Load array this->attributes, or old this->attribute_xxx like attribute_label, attribute_type, ...
 	 *
@@ -755,9 +770,9 @@ class ExtraFields
 	 * 	@param	boolean		$forceload			Force load of extra fields whatever is option MAIN_EXTRAFIELDS_DISABLED. Deprecated. Should not be required.
 	 * 	@return	array							Array of attributes keys+label for all extra fields.
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_name_optionals_label($elementtype,$forceload=false)
 	{
+        // phpcs:enable
 		global $conf;
 
 		if (empty($elementtype)) return array();
@@ -982,11 +997,11 @@ class ExtraFields
 
 			$showtime = in_array($type,array('datetime')) ? 1 : 0;
 
-			// Do not show current date when field not required (see select_date() method)
+			// Do not show current date when field not required (see selectDate() method)
 			if (!$required && $value == '') $value = '-1';
 
 			// TODO Must also support $moreparam
-			$out = $form->select_date($value, $keyprefix.$key.$keysuffix, $showtime, $showtime, $required, '', 1, (($keyprefix != 'search_' && $keyprefix != 'search_options_') ? 1 : 0), 1, 0, 1);
+			$out = $form->selectDate($value, $keyprefix.$key.$keysuffix, $showtime, $showtime, $required, '', 1, (($keyprefix != 'search_' && $keyprefix != 'search_options_') ? 1 : 0), 0, 1);
 		}
 		elseif (in_array($type,array('int','integer')))
 		{
@@ -1377,7 +1392,6 @@ class ExtraFields
 							}
 
 							$data[$obj->rowid]=$labeltoshow;
-
 						} else {
 							if (! $notrans) {
 								$translabel = $langs->trans($obj->{$InfoFieldList[1]});
@@ -1406,7 +1420,6 @@ class ExtraFields
 					$this->db->free($resql);
 
 					$out=$form->multiselectarray($keyprefix.$key.$keysuffix, $data, $value_arr, '', 0, '', 0, '100%');
-
 				} else {
 					print 'Error in request ' . $sql . ' ' . $this->db->lasterror() . '. Check setup of extra parameters.<br>';
 				}
@@ -1700,7 +1713,6 @@ class ExtraFields
 					}
 				}
 				$value='<div class="select2-container-multi-dolibarr" style="width: 90%;"><ul class="select2-choices-dolibarr">'.implode(' ', $toprint).'</ul></div>';
-
 			} else {
 				dol_syslog(get_class($this) . '::showOutputField error ' . $this->db->lasterror(), LOG_WARNING);
 			}
@@ -1866,11 +1878,16 @@ class ExtraFields
 				if (empty($enabled)) continue;
 				if (empty($perms)) continue;
 
-				if ($this->attributes[$object->table_element]['required'][$key] && empty($_POST["options_".$key])) // Check if empty without GETPOST, value can be alpha, int, array, etc...
+				if ($this->attributes[$object->table_element]['required'][$key])	// Value is required
 				{
-					//print 'ccc'.$value.'-'.$this->attributes[$object->table_element]['required'][$key];
-					$nofillrequired++;
-					$error_field_required[] = $langs->transnoentitiesnoconv($value);
+					// Check if empty without using GETPOST, value can be alpha, int, array, etc...
+					if ((! is_array($_POST["options_".$key]) && empty($_POST["options_".$key]) && $_POST["options_".$key] != '0')
+						|| (is_array($_POST["options_".$key]) && empty($_POST["options_".$key])))
+					{
+						//print 'ccc'.$value.'-'.$this->attributes[$object->table_element]['required'][$key];
+						$nofillrequired++;
+						$error_field_required[] = $langs->transnoentitiesnoconv($value);
+					}
 				}
 
 				if (in_array($key_type,array('date')))
@@ -1924,24 +1941,36 @@ class ExtraFields
 	/**
 	 * return array_options array of data of extrafields value of object sent by a search form
 	 *
-	 * @param  array   $extralabels    $array of extrafields (@deprecated)
-	 * @param  string  $keyprefix      Prefix string to add into name and id of field (can be used to avoid duplicate names)
-	 * @param  string  $keysuffix      Suffix string to add into name and id of field (can be used to avoid duplicate names)
-	 * @return array|int               array_options set or 0 if no value
+	 * @param  array|string		$extrafieldsobjectkey  	array of extrafields (old usage) or value of object->table_element (new usage)
+	 * @param  string			$keyprefix      		Prefix string to add into name and id of field (can be used to avoid duplicate names)
+	 * @param  string			$keysuffix      		Suffix string to add into name and id of field (can be used to avoid duplicate names)
+	 * @return array|int								array_options set or 0 if no value
 	 */
-	function getOptionalsFromPost($extralabels,$keyprefix='',$keysuffix='')
+	function getOptionalsFromPost($extrafieldsobjectkey, $keyprefix='', $keysuffix='')
 	{
 		global $_POST;
 
-		if (is_array($this->attributes[$object->table_element]['label'])) $extralabels=$this->attributes[$object->table_element]['label'];
+		if (is_string($extrafieldsobjectkey) && is_array($this->attributes[$extrafieldsobjectkey]['label']))
+		{
+			$extralabels = $this->attributes[$extrafieldsobjectkey]['label'];
+		}
+		else
+		{
+			$extralabels = $extrafieldsobjectkey;
+		}
 
-		$array_options = array();
 		if (is_array($extralabels))
 		{
+			$array_options = array();
+
 			// Get extra fields
 			foreach ($extralabels as $key => $value)
 			{
-				$key_type = $this->attributes[$object->table_element]['type'][$key];
+				$key_type = '';
+				if (is_string($extrafieldsobjectkey))
+				{
+					$key_type = $this->attributes[$extrafieldsobjectkey]['type'][$key];
+				}
 
 				if (in_array($key_type,array('date','datetime')))
 				{
@@ -1970,8 +1999,7 @@ class ExtraFields
 
 			return $array_options;
 		}
-		else {
-			return 0;
-		}
+
+		return 0;
 	}
 }

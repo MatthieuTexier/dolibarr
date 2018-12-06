@@ -38,15 +38,23 @@ class Productcustomerprice extends CommonObject
 	 */
 	public $table_element = 'product_customer_price';
 
+	/**
+	 * @var int Entity
+	 */
 	public $entity;
+
 	public $datec = '';
 	public $tms = '';
+
+	/**
+     * @var int ID
+     */
 	public $fk_product;
 
 	/**
 	 * @var int Thirdparty ID
 	 */
-    public $fk_soc;
+  public $fk_soc;
 
 	public $price;
 	public $price_ttc;
@@ -67,6 +75,7 @@ class Productcustomerprice extends CommonObject
 
 	public $lines = array ();
 
+
 	/**
 	 * Constructor
 	 *
@@ -74,9 +83,7 @@ class Productcustomerprice extends CommonObject
 	 */
     function __construct($db)
     {
-
 		$this->db = $db;
-		return 1;
 	}
 
 	/**
@@ -314,6 +321,7 @@ class Productcustomerprice extends CommonObject
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 * Load all customer prices in memory from database
 	 *
@@ -324,9 +332,9 @@ class Productcustomerprice extends CommonObject
 	 * @param 	array 	$filter 	Filter for select
 	 * @return 	int 				<0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_all($sortorder = '', $sortfield = '', $limit = 0, $offset = 0, $filter = array())
 	{
+        // phpcs:enable
 		global $langs;
 
 		if ( empty($sortfield)) $sortfield = "t.rowid";
@@ -428,6 +436,7 @@ class Productcustomerprice extends CommonObject
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 * Load all objects in memory from database
 	 *
@@ -438,9 +447,9 @@ class Productcustomerprice extends CommonObject
 	 * @param 	array 	$filter 	Filter for sql request
 	 * @return 	int 			<0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_all_log($sortorder, $sortfield, $limit, $offset, $filter = array())
 	{
+        // phpcs:enable
 		global $langs;
 
 		if (! empty($sortfield)) $sortfield = "t.rowid";
@@ -975,9 +984,17 @@ class PriceByCustomerLine
 	 */
 	public $id;
 
+	/**
+	 * @var int Entity
+	 */
 	public $entity;
+
 	public $datec = '';
 	public $tms = '';
+
+	/**
+     * @var int ID
+     */
 	public $fk_product;
 
 	/**

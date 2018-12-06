@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2008 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2009 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2009 Regis Houssin        <regis.houssin@inodbox.com>
  * Copyright (C) 2016 Marcos García        <marcosgdf@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,10 @@ class BankCateg // extends CommonObject
 {
 	//public $element='bank_categ';			//!< Id that identify managed objects
 	//public $table_element='bank_categ';	//!< Name of table without prefix where object is stored
-    public $picto='generic';
+    /**
+	 * @var string String with name of icon for myobject. Must be the part after the 'object_' into object_myobject.png
+	 */
+	public $picto='generic';
 
 	/**
      * @var int ID

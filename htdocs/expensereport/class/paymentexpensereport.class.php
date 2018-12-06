@@ -40,24 +40,52 @@ class PaymentExpenseReport extends CommonObject
 	 */
 	public $table_element='payment_expensereport';
 
-    public $picto = 'payment';
+    /**
+	 * @var string String with name of icon for myobject. Must be the part after the 'object_' into object_myobject.png
+	 */
+	public $picto = 'payment';
 
-	var $rowid;
+	/**
+	 * @var int ID
+	 */
+	public $rowid;
 
-	var $fk_expensereport;
-	var $datec='';
-	var $tms='';
-	var $datep='';
-    var $amount;            // Total amount of payment
-    var $amounts=array();   // Array of amounts
-	var $fk_typepayment;
-	var $num_payment;
-	var $fk_bank;
-	var $fk_user_creat;
-	var $fk_user_modif;
+	/**
+     * @var int ID
+     */
+	public $fk_expensereport;
+
+	public $datec='';
+	public $tms='';
+	public $datep='';
+    public $amount;            // Total amount of payment
+    public $amounts=array();   // Array of amounts
+
+    /**
+     * @var int ID
+     */
+	public $fk_typepayment;
+
+	public $num_payment;
+
+	/**
+     * @var int ID
+     */
+	public $fk_bank;
+
+	/**
+     * @var int ID
+     */
+	public $fk_user_creat;
+
+	/**
+     * @var int ID
+     */
+	public $fk_user_modif;
+
     //Unknow field
-    var $chid;
-    var $total;
+    public $chid;
+    public $total;
 
 	/**
 	 *	Constructor
@@ -137,7 +165,6 @@ class PaymentExpenseReport extends CommonObject
 			{
 				$error++;
 			}
-
 		}
 
 		if ($totalamount != 0 && ! $error)
@@ -450,16 +477,17 @@ class PaymentExpenseReport extends CommonObject
 	    return '';
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Renvoi le libelle d'un statut donne
 	 *
-	 *  @param	int		$statut        	Id statut
+	 *  @param  int		$statut        	Id statut
 	 *  @param  int		$mode          	0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
 	 *  @return string 			       	Libelle du statut
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function LibStatut($statut,$mode=0)
 	{
+        // phpcs:enable
 	    global $langs;
 
 	    return '';
@@ -604,15 +632,16 @@ class PaymentExpenseReport extends CommonObject
     }
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Update link between the expense report payment and the generated line in llx_bank
 	 *
 	 *  @param	int		$id_bank         Id if bank
 	 *  @return	int			             >0 if OK, <=0 if KO
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function update_fk_bank($id_bank)
 	{
+        // phpcs:enable
 		$sql = "UPDATE ".MAIN_DB_PREFIX."payment_expensereport SET fk_bank = ".$id_bank." WHERE rowid = ".$this->id;
 
 		dol_syslog(get_class($this)."::update_fk_bank", LOG_DEBUG);

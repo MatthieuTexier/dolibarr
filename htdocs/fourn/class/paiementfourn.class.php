@@ -2,10 +2,11 @@
 /* Copyright (C) 2002-2004 Rodolphe Quiedeville   <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2007 Laurent Destailleur    <eldy@users.sourceforge.net>
  * Copyright (C) 2005      Marc Barilley / Ocebo  <marc@ocebo.com>
- * Copyright (C) 2005-2009 Regis Houssin          <regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2009 Regis Houssin          <regis.houssin@inodbox.com>
  * Copyright (C) 2010-2011 Juanjo Menent          <jmenent@2byte.es>
  * Copyright (C) 2014      Marcos García          <marcosgdf@gmail.com>
  * Copyright (C) 2018      Nicolas ZABOURI	  <info@inovea-conseil.com>
+ * Copyright (C) 2018       Frédéric France         <frederic.francenetlogic.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,12 +40,12 @@ class PaiementFourn extends Paiement
 	 * @var string ID to identify managed object
 	 */
 	public $element='payment_supplier';
-	
+
 	/**
 	 * @var string Name of table without prefix where object is stored
 	 */
 	public $table_element='paiementfourn';
-	
+
 	public $picto = 'payment';
 
 	var $statut;        //Status of payment. 0 = unvalidated; 1 = validated
@@ -262,7 +263,6 @@ class PaiementFourn extends Paiement
 							$this->error=$this->db->lasterror();
 							$error++;
 						}
-
 					}
 					else
 					{
@@ -505,6 +505,7 @@ class PaiementFourn extends Paiement
 		return $this->LibStatut($this->statut,$mode);
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Renvoi le libelle d'un statut donne
 	 *
@@ -512,9 +513,9 @@ class PaiementFourn extends Paiement
 	 *	@param      int		$mode      0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
 	 *	@return     string      		Libelle du statut
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function LibStatut($status,$mode=0)
 	{
+        // phpcs:enable
 		global $langs;
 
 		$langs->load('compta');
@@ -611,6 +612,7 @@ class PaiementFourn extends Paiement
 		$this->ref = 'SPECIMEN';
 		$this->specimen=1;
 		$this->facid = 1;
+		$this->socid = 1;
 		$this->datepaye = $nownotime;
 	}
 
@@ -654,14 +656,12 @@ class PaiementFourn extends Paiement
 			}
 
 			// For compatibility
-			if (! $mybool)
-			{
+			if ($mybool === false) {
 				$file = $conf->global->SUPPLIER_PAYMENT_ADDON.".php";
 				$classname = "mod_supplier_payment_".$conf->global->SUPPLIER_PAYMENT_ADDON;
 				$classname = preg_replace('/\-.*$/','',$classname);
 				// Include file with class
-				foreach ($conf->file->dol_document_root as $dirroot)
-				{
+				foreach ($conf->file->dol_document_root as $dirroot) {
 					$dir = $dirroot."/core/modules/supplier_payment/";
 
 					// Load file with numbering class (if found)
@@ -671,8 +671,7 @@ class PaiementFourn extends Paiement
 				}
 			}
 
-			if (! $mybool)
-			{
+			if ($mybool === false) {
 				dol_print_error('',"Failed to include file ".$file);
 				return '';
 			}
@@ -770,15 +769,16 @@ class PaiementFourn extends Paiement
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Load the third party of object, from id into this->thirdparty
 	 *
 	 *	@param		int		$force_thirdparty_id	Force thirdparty id
 	 *	@return		int								<0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function fetch_thirdparty($force_thirdparty_id=0)
 	{
+        // phpcs:enable
 		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
 
 		if (empty($force_thirdparty_id))

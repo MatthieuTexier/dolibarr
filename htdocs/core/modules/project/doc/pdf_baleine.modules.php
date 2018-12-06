@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2010-2012 Regis Houssin  <regis.houssin@capnetworks.com>
+/* Copyright (C) 2010-2012 Regis Houssin  <regis.houssin@inodbox.com>
  * Copyright (C) 2018      Laurent Destailleur <eldy@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -107,9 +107,9 @@ class pdf_baleine extends ModelePDFProjects
 
 	/**
 	 * Issuer
-	 * @var Societe
+	 * @var Company object that emits
 	 */
-	public $emetteur;	// Objet societe qui emet
+	public $emetteur;
 
 	/**
 	 *	Constructor
@@ -165,16 +165,17 @@ class pdf_baleine extends ModelePDFProjects
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
-	 *	Fonction generant le projet sur le disque
+	 *  Fonction generant le projet sur le disque
 	 *
 	 *	@param	Project		$object   		Object project a generer
 	 *	@param	Translate	$outputlangs	Lang output object
 	 *	@return	int         				1 if OK, <=0 if KO
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function write_file($object,$outputlangs)
 	{
+        // phpcs:enable
 		global $conf, $hookmanager, $langs, $user;
 
 		if (! is_object($outputlangs)) $outputlangs=$langs;

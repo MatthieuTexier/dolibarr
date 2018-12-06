@@ -46,6 +46,9 @@ class BlockedLog
 	 */
 	public $entity;
 
+	/**
+	 * @var string Error message
+	 */
 	public $error = '';
 
 	/**
@@ -944,17 +947,14 @@ class BlockedLog
 
 	 		$sql="SELECT rowid FROM ".MAIN_DB_PREFIX."blockedlog
 	         WHERE entity=".$conf->entity;
-
 		}
 		else if ($element=='not_certified') {
 			$sql="SELECT rowid FROM ".MAIN_DB_PREFIX."blockedlog
 	         WHERE entity=".$conf->entity." AND certified = 0";
-
 		}
 		else if ($element=='just_certified') {
 			$sql="SELECT rowid FROM ".MAIN_DB_PREFIX."blockedlog
 	         WHERE entity=".$conf->entity." AND certified = 1";
-
 		}
 		else{
 			$sql="SELECT rowid FROM ".MAIN_DB_PREFIX."blockedlog

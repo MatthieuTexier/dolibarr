@@ -1,7 +1,7 @@
 <?php
-/* Copyright (C) 2010-2012	Regis Houssin  <regis.houssin@capnetworks.com>
- * Copyright (C) 2015		Charlie Benke  <charlie@patas-monkey.com>
- * Copyright (C) 2018      Laurent Destailleur <eldy@users.sourceforge.net>
+/* Copyright (C) 2010-2012	Regis Houssin   <regis.houssin@inodbox.com>
+ * Copyright (C) 2015-2018	Charlene Benke  <charlie@patas-monkey.com>
+ * Copyright (C) 2018      Laurent Destailleur  <eldy@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,11 @@ if (! empty($conf->agenda->enabled))        require_once DOL_DOCUMENT_ROOT.'/com
 
 class pdf_beluga extends ModelePDFProjects
 {
-	var $emetteur;	// Objet societe qui emet
+	/**
+	 * Issuer
+	 * @var Societe
+	 */
+	public $emetteur;
 
 	/**
 	 *	Constructor
@@ -110,6 +114,7 @@ class pdf_beluga extends ModelePDFProjects
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Fonction generant le projet sur le disque
 	 *
@@ -117,9 +122,9 @@ class pdf_beluga extends ModelePDFProjects
 	 *	@param	Translate	$outputlangs	Lang output object
 	 *	@return	int         				1 if OK, <=0 if KO
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function write_file($object,$outputlangs)
 	{
+        // phpcs:enable
 		global $conf, $hookmanager, $langs, $user;
 
         $formproject=new FormProjets($this->db);
@@ -186,10 +191,11 @@ class pdf_beluga extends ModelePDFProjects
 
 				// Complete object by loading several other informations
 				$task = new Task($this->db);
-				$tasksarray = $task->getTasksArray(0,0,$object->id);
+				$tasksarray = array();
+				$tasksarray = $task->getTasksArray(0, 0, $object->id);
 
-				if (! $object->id > 0)  // Special case when used with object = specimen, we may return all lines
-				{
+				// Special case when used with object = specimen, we may return all lines
+				if (! $object->id > 0) {
 					$tasksarray=array_slice($tasksarray, 0, min(5, count($tasksarray)));
 				}
 

@@ -2,7 +2,7 @@
 /* Copyright (C) 2001-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2003      Eric Seigne          <erics@rycks.com>
  * Copyright (C) 2004-2016 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2005-2010 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2010 Regis Houssin        <regis.houssin@inodbox.com>
  * Copyright (C) 2010-2015 Juanjo Menent        <jmenent@2byte.es>
  * Copyright (C) 2014      Jean Heimburger      <jean@tiaris.info>
  * Copyright (C) 2015      Marcos García        <marcosgdf@gmail.com>
@@ -109,7 +109,7 @@ if (empty($reshook))
 	if ($action == 'setsupplier_order_min_amount')
 	{
 		$object->fetch($id);
-		$object->supplier_order_min_amount=GETPOST('supplier_order_min_amount');
+		$object->supplier_order_min_amount=price2num(GETPOST('supplier_order_min_amount','alpha'));
 		$result=$object->update($object->id, $user);
 		if ($result < 0) setEventMessages($object->error, $object->errors, 'errors');
 	}
@@ -298,15 +298,17 @@ if ($object->id > 0)
 	print '</td>';
 	print '</tr>';
 
-	print '<tr class="nowrap">';
-	print '<td>';
-	print $form->editfieldkey("OrderMinAmount",'supplier_order_min_amount',$object->supplier_order_min_amount,$object,$user->rights->societe->creer);
-	print '</td><td>';
-	$limit_field_type = (! empty($conf->global->MAIN_USE_JQUERY_JEDITABLE)) ? 'numeric' : 'amount';
-	print $form->editfieldval("OrderMinAmount",'supplier_order_min_amount',$object->supplier_order_min_amount,$object,$user->rights->societe->creer,$limit_field_type,($object->supplier_order_min_amount != '' ? price($object->supplier_order_min_amount) : ''));
-
-	print '</td>';
-	print '</tr>';
+	if (! empty($conf->fournisseur->enabled) && ! empty($conf->global->ORDER_MANAGE_MIN_AMOUNT))
+	{
+		print '<tr class="nowrap">';
+		print '<td>';
+		print $form->editfieldkey("OrderMinAmount",'supplier_order_min_amount',$object->supplier_order_min_amount,$object,$user->rights->societe->creer);
+		print '</td><td>';
+		$limit_field_type = (! empty($conf->global->MAIN_USE_JQUERY_JEDITABLE)) ? 'numeric' : 'amount';
+		print $form->editfieldval("OrderMinAmount",'supplier_order_min_amount',$object->supplier_order_min_amount,$object,$user->rights->societe->creer,$limit_field_type,($object->supplier_order_min_amount != '' ? price($object->supplier_order_min_amount) : ''));
+		print '</td>';
+		print '</tr>';
+	}
 
 	// Categories
 	if (! empty($conf->categorie->enabled))

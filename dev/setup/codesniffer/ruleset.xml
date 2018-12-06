@@ -173,6 +173,7 @@
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines">
         <severity>0</severity>
     </rule>
+    <rule ref="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose" />
 
     <rule ref="Squiz.Functions.MultiLineFunctionDeclaration" />
 
@@ -238,9 +239,9 @@
 	<!--<rule ref="PEAR.Commenting.FunctionComment.MissingReturn">
         <severity>0</severity>
     </rule>-->
-    <rule ref="PEAR.Commenting.FunctionComment.Missing">
+    <!--<rule ref="PEAR.Commenting.FunctionComment.Missing">
         <severity>0</severity>
-    </rule>
+    </rule>-->
 
     <rule ref="PEAR.Commenting.FunctionComment.SpacingAfterParamType" />
 

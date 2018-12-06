@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2005       Marc Barilley / Ocebo   <marc@ocebo.com>
  * Copyright (C) 2005-2018  Laurent Destailleur     <eldy@users.sourceforge.net>
- * Copyright (C) 2005-2011  Regis Houssin           <regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2011  Regis Houssin           <regis.houssin@inodbox.com>
  * Copyright (C) 2010       Juanjo Menent           <jmenent@2byte.es>
  * Copyright (C) 2015-2016  Raphaël Doursenaud      <rdoursenaud@gpcsolutions.fr>
  *
@@ -73,10 +73,7 @@ $versionfrom=GETPOST("versionfrom",'alpha',3)?GETPOST("versionfrom",'alpha',3):(
 $versionto=GETPOST("versionto",'alpha',3)?GETPOST("versionto",'alpha',3):(empty($argv[2])?'':$argv[2]);
 $enablemodules=GETPOST("enablemodules",'alpha',3)?GETPOST("enablemodules",'alpha',3):(empty($argv[3])?'':$argv[3]);
 
-$langs->load('admin');
-$langs->load('install');
-$langs->load("bills");
-$langs->load("suppliers");
+$langs->loadLangs(array("admin", "install", "bills", "suppliers"));
 
 if ($dolibarr_main_db_type == 'mysqli') $choix=1;
 if ($dolibarr_main_db_type == 'pgsql')  $choix=2;
@@ -449,7 +446,7 @@ if (! GETPOST('action','aZ09') || preg_match('/upgrade/i',GETPOST('action','aZ09
         $beforeversionarray=explode('.','9.0.9');
         if (versioncompare($versiontoarray,$afterversionarray) >= 0 && versioncompare($versiontoarray,$beforeversionarray) <= 0)
         {
-        	//migrate_rename_directories($db,$langs,$conf,'/contracts','/contract');
+        	migrate_user_photospath();
         }
     }
 
@@ -2298,7 +2295,6 @@ function migrate_detail_livraison($db,$langs,$conf)
                     print ". ";
                     $i++;
                 }
-
             }
 
             if ($error == 0)
@@ -2386,7 +2382,6 @@ function migrate_stocks($db,$langs,$conf)
                 print ". ";
                 $i++;
             }
-
         }
 
         if ($error == 0)
@@ -2641,7 +2636,6 @@ function migrate_restore_missing_links($db,$langs,$conf)
                 //print ". ";
                 $i++;
             }
-
         }
         else print $langs->trans('AlreadyDone')."<br>\n";
 
@@ -2707,7 +2701,6 @@ function migrate_restore_missing_links($db,$langs,$conf)
                 //print ". ";
                 $i++;
             }
-
         }
         else
         {
@@ -4432,49 +4425,50 @@ function migrate_rename_directories($db,$langs,$conf,$oldname,$newname)
  */
 function migrate_delete_old_files($db,$langs,$conf)
 {
-    $result=true;
+	$result=true;
 
-    dolibarr_install_syslog("upgrade2::migrate_delete_old_files");
+	dolibarr_install_syslog("upgrade2::migrate_delete_old_files");
 
-    // List of files to delete
-    $filetodeletearray=array(
-    DOL_DOCUMENT_ROOT.'/core/triggers/interface_demo.class.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/barre_left/default.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/barre_top/default.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/modComptabiliteExpert.class.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/modCommercial.class.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/modProduit.class.php',
-    DOL_DOCUMENT_ROOT.'/phenix/inc/triggers/interface_modPhenix_Phenixsynchro.class.php',
-    DOL_DOCUMENT_ROOT.'/webcalendar/inc/triggers/interface_modWebcalendar_webcalsynchro.class.php',
-    DOL_DOCUMENT_ROOT.'/core/triggers/interface_modWebcalendar_Webcalsynchro.class.php',
-    DOL_DOCUMENT_ROOT.'/core/triggers/interface_modCommande_Ecotax.class.php',
-    DOL_DOCUMENT_ROOT.'/core/triggers/interface_modCommande_fraisport.class.php',
-    DOL_DOCUMENT_ROOT.'/core/triggers/interface_modPropale_PropalWorkflow.class.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/smartphone/iphone.lib.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/smartphone/iphone_backoffice.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/smartphone/iphone_frontoffice.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/standard/auguria_backoffice.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/standard/auguria_frontoffice.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/standard/eldy_backoffice.php',
-    DOL_DOCUMENT_ROOT.'/core/menus/standard/eldy_frontoffice.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/mailings/contacts2.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/mailings/contacts3.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/mailings/contacts4.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/mailings/framboise.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/mailings/dolibarr_services_expired.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/mailings/peche.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/mailings/poire.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/mailings/kiwi.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/facture/pdf_crabe.modules.php',
-    DOL_DOCUMENT_ROOT.'/core/modules/facture/pdf_oursin.modules.php',
+	// List of files to delete
+	$filetodeletearray=array(
+		DOL_DOCUMENT_ROOT.'/core/triggers/interface_demo.class.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/barre_left/default.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/barre_top/default.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/modComptabiliteExpert.class.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/modCommercial.class.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/modProduit.class.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/modSkype.class.php',
+		DOL_DOCUMENT_ROOT.'/phenix/inc/triggers/interface_modPhenix_Phenixsynchro.class.php',
+		DOL_DOCUMENT_ROOT.'/webcalendar/inc/triggers/interface_modWebcalendar_webcalsynchro.class.php',
+		DOL_DOCUMENT_ROOT.'/core/triggers/interface_modWebcalendar_Webcalsynchro.class.php',
+		DOL_DOCUMENT_ROOT.'/core/triggers/interface_modCommande_Ecotax.class.php',
+		DOL_DOCUMENT_ROOT.'/core/triggers/interface_modCommande_fraisport.class.php',
+		DOL_DOCUMENT_ROOT.'/core/triggers/interface_modPropale_PropalWorkflow.class.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/smartphone/iphone.lib.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/smartphone/iphone_backoffice.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/smartphone/iphone_frontoffice.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/standard/auguria_backoffice.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/standard/auguria_frontoffice.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/standard/eldy_backoffice.php',
+		DOL_DOCUMENT_ROOT.'/core/menus/standard/eldy_frontoffice.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/mailings/contacts2.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/mailings/contacts3.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/mailings/contacts4.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/mailings/framboise.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/mailings/dolibarr_services_expired.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/mailings/peche.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/mailings/poire.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/mailings/kiwi.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/facture/pdf_crabe.modules.php',
+		DOL_DOCUMENT_ROOT.'/core/modules/facture/pdf_oursin.modules.php',
 
-    DOL_DOCUMENT_ROOT.'/compta/facture/class/api_invoice.class.php',
-    DOL_DOCUMENT_ROOT.'/commande/class/api_commande.class.php',
-    DOL_DOCUMENT_ROOT.'/user/class/api_user.class.php',
-    DOL_DOCUMENT_ROOT.'/product/class/api_product.class.php',
-    DOL_DOCUMENT_ROOT.'/societe/class/api_contact.class.php',
-    DOL_DOCUMENT_ROOT.'/societe/class/api_thirdparty.class.php'
-
+		DOL_DOCUMENT_ROOT.'/compta/facture/class/api_invoice.class.php',
+		DOL_DOCUMENT_ROOT.'/commande/class/api_commande.class.php',
+		DOL_DOCUMENT_ROOT.'/user/class/api_user.class.php',
+		DOL_DOCUMENT_ROOT.'/product/class/api_product.class.php',
+		DOL_DOCUMENT_ROOT.'/societe/class/api_contact.class.php',
+		DOL_DOCUMENT_ROOT.'/societe/class/api_thirdparty.class.php',
+		DOL_DOCUMENT_ROOT.'/support/online.php'
     );
 
     foreach ($filetodeletearray as $filetodelete)
@@ -4832,7 +4826,80 @@ function migrate_reload_menu($db,$langs,$conf,$versionto)
     }
 }
 
+/**
+ * Migrate file from old path to new one for users
+ *
+ * @return	void
+ */
+function migrate_user_photospath()
+{
+	global $conf, $db, $langs;
 
+	print '<tr><td colspan="4">';
+
+	print '<b>'.$langs->trans('MigrationUserPhotoPath')."</b><br>\n";
+
+	include_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
+	$fuser = new User($db);
+
+	$sql = "SELECT rowid as uid from ".MAIN_DB_PREFIX."user";	// Get list of all users
+	$resql = $db->query($sql);
+	if ($resql)
+	{
+		while ($obj = $db->fetch_object($resql))
+		{
+			$fuser->fetch($obj->uid);
+			//echo '<hr>'.$fuser->id.' -> '.$fuser->entity;
+			$entity = (!empty($fuser->entity)) ? $fuser->entity : 1;
+			if ($entity > 1) {
+				$dir = DOL_DATA_ROOT . '/' . $entity . '/users';
+			} else {
+				$dir = $conf->user->multidir_output[$entity];	// $conf->user->multidir_output[] for each entity is construct by the multicompany module
+			}
+			$origin = $dir .'/'. get_exdir($fuser->id,2,0,0,$fuser,'user');
+			$destin = $dir.'/'.$fuser->id;
+
+			$error = 0;
+
+			$origin_osencoded=dol_osencode($origin);
+			$destin_osencoded=dol_osencode($destin);
+			dol_mkdir($destin);
+			//echo '<hr>'.$origin.' -> '.$destin;
+			if (dol_is_dir($origin))
+			{
+				$handle=opendir($origin_osencoded);
+		        if (is_resource($handle))
+		        {
+		        	while (($file = readdir($handle)) !== false)
+		    		{
+		     			if ($file != '.' && $file != '..' && is_dir($origin_osencoded.'/'.$file))
+		    			{
+		    				$thumbs = opendir($origin_osencoded.'/'.$file);
+		    				if (is_resource($thumbs))
+		        			{
+			     				dol_mkdir($destin.'/'.$file);
+			     				while (($thumb = readdir($thumbs)) !== false)
+				    			{
+				    				dol_move($origin.'/'.$file.'/'.$thumb, $destin.'/'.$file.'/'.$thumb);
+				    			}
+		//		    			dol_delete_dir($origin.'/'.$file);
+		        			}
+		    			}
+		    			else
+		    			{
+		    				if (dol_is_file($origin.'/'.$file) )
+		    				{
+		    					dol_move($origin.'/'.$file, $destin.'/'.$file);
+		    				}
+		    			}
+		    		}
+		        }
+			}
+		}
+	}
+
+	print '</td></tr>';
+}
 
 
 /* A faire egalement: Modif statut paye et fk_facture des factures payes completement

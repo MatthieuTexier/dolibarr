@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2010-2011 Regis Houssin  <regis.houssin@capnetworks.com>
+/* Copyright (C) 2010-2011 Regis Houssin  <regis.houssin@inodbox.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,6 +84,7 @@ class ActionsCardIndividual extends ActionsCardCommon
 		return $return;
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *    Assign custom values for canvas (for example into this->tpl to be used by templates)
 	 *
@@ -92,9 +93,9 @@ class ActionsCardIndividual extends ActionsCardCommon
 	 *    @param	string	$ref		Ref of object
 	 *    @return	void
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function assign_values(&$action, $id=0, $ref='')
 	{
+        // phpcs:enable
 		global $conf, $langs;
 		global $form, $formcompany;
 

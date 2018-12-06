@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2005		Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2006-2011	Laurent Destailleur	<eldy@users.sourceforge.net>
- * Copyright (C) 2009-2014	Regis Houssin		<regis.houssin@capnetworks.com>
+ * Copyright (C) 2009-2014	Regis Houssin		<regis.houssin@inodbox.com>
  * Copyright (C) 2011		Juanjo Menent		<jmenent@2byte.es>
  * Copyright (C) 2012		Christophe Battarel	<christophe.battarel@altairis.fr>
  * Copyright (C) 2015		Marcos García           <marcosgdf@gmail.com>
@@ -72,12 +72,21 @@ class ProductFournisseur extends Product
     public $fourn_remise_percent;    // discount for quantity (percent)
     public $fourn_remise;            // discount for quantity (amount)
     public $product_fourn_id;        // supplier id
-    public $fk_availability;         // availability delay - visible/used if option FOURN_PRODUCT_AVAILABILITY is on (duplicate information compared to delivery delay)
+
+    /**
+     * @var int ID availability delay - visible/used if option FOURN_PRODUCT_AVAILABILITY is on (duplicate information compared to delivery delay)
+     */
+    public $fk_availability;
+
     public $fourn_unitprice;
     public $fourn_tva_tx;
     public $fourn_tva_npr;
 
+    /**
+     * @var int ID
+     */
     public $fk_supplier_price_expression;
+
     public $supplier_reputation;     // reputation of supplier
     public $reputations=array();     // list of available supplier reputations
 
@@ -104,15 +113,16 @@ class ProductFournisseur extends Product
 
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *    Remove all prices for this couple supplier-product
      *
      *    @param	int		$id_fourn   Supplier Id
      *    @return   int         		< 0 if error, > 0 if ok
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function remove_fournisseur($id_fourn)
     {
+        // phpcs:enable
         $ok=1;
 
         $this->db->begin();
@@ -141,15 +151,16 @@ class ProductFournisseur extends Product
     }
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      * 	Remove a price for a couple supplier-product
      *
      * 	@param	int		$rowid		Line id of price
      *	@return	int					<0 if KO, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function remove_product_fournisseur_price($rowid)
     {
+        // phpcs:enable
         global $conf, $user;
 
         $error=0;
@@ -186,6 +197,7 @@ class ProductFournisseur extends Product
     }
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *    Modify the purchase price for a supplier
      *
@@ -212,9 +224,9 @@ class ProductFournisseur extends Product
      *    @param  	string		$desc_fourn     	            Custom description for product_fourn_price
      *    @return	int								<0 if KO, >=0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function update_buyprice($qty, $buyprice, $user, $price_base_type, $fourn, $availability, $ref_fourn, $tva_tx, $charges=0, $remise_percent=0, $remise=0, $newnpr=0, $delivery_time_days=0, $supplier_reputation='', $localtaxes_array=array(), $newdefaultvatcode='', $multicurrency_buyprice=0, $multicurrency_price_base_type='HT',$multicurrency_tx=1,$multicurrency_code='', $desc_fourn='')
     {
+        // phpcs:enable
         global $conf, $langs;
         //global $mysoc;
 
@@ -441,6 +453,7 @@ class ProductFournisseur extends Product
         }
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *    Loads the price information of a provider
      *
@@ -448,9 +461,9 @@ class ProductFournisseur extends Product
      *    @param    int     $ignore_expression  Ignores the math expression for calculating price and uses the db value instead
      *    @return   int 					    < 0 if KO, 0 if OK but not found, > 0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function fetch_product_fournisseur_price($rowid, $ignore_expression = 0)
     {
+        // phpcs:enable
         global $conf;
 
         $sql = "SELECT pfp.rowid, pfp.price, pfp.quantity, pfp.unitprice, pfp.remise_percent, pfp.remise, pfp.tva_tx, pfp.default_vat_code, pfp.info_bits as fourn_tva_npr, pfp.fk_availability,";
@@ -529,6 +542,7 @@ class ProductFournisseur extends Product
     }
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *    List all supplier prices of a product
      *
@@ -539,17 +553,16 @@ class ProductFournisseur extends Product
      *    @param	int		$offset		Offset
      *    @return	array				Array of Products with new properties to define supplier price
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function list_product_fournisseur_price($prodid, $sortfield='', $sortorder='', $limit=0, $offset=0)
     {
+        // phpcs:enable
         global $conf;
 
         $sql = "SELECT s.nom as supplier_name, s.rowid as fourn_id,";
         $sql.= " pfp.rowid as product_fourn_pri_id, pfp.ref_fourn, pfp.desc_fourn, pfp.fk_product as product_fourn_id, pfp.fk_supplier_price_expression,";
-        $sql.= " pfp.price, pfp.quantity, pfp.unitprice, pfp.remise_percent, pfp.remise, pfp.tva_tx, pfp.fk_availability, pfp.charges, pfp.info_bits, pfp.delivery_time_days, pfp.supplier_reputation";
-        $sql.= " ,pfp.multicurrency_price, pfp.multicurrency_unitprice, pfp.multicurrency_tx, pfp.fk_multicurrency, pfp.multicurrency_code";
-        $sql.= " FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp";
-        $sql.= ", ".MAIN_DB_PREFIX."societe as s";
+        $sql.= " pfp.price, pfp.quantity, pfp.unitprice, pfp.remise_percent, pfp.remise, pfp.tva_tx, pfp.fk_availability, pfp.charges, pfp.info_bits, pfp.delivery_time_days, pfp.supplier_reputation,";
+        $sql.= " pfp.multicurrency_price, pfp.multicurrency_unitprice, pfp.multicurrency_tx, pfp.fk_multicurrency, pfp.multicurrency_code, pfp.datec, pfp.tms";
+        $sql.= " FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp, ".MAIN_DB_PREFIX."societe as s";
         $sql.= " WHERE pfp.entity IN (".getEntity('productsupplierprice').")";
         $sql.= " AND pfp.fk_soc = s.rowid";
         $sql.= " AND s.status=1"; // only enabled company selected
@@ -589,6 +602,8 @@ class ProductFournisseur extends Product
                 $prodfourn->fourn_tva_npr					= $record["info_bits"];
                 $prodfourn->fk_supplier_price_expression    = $record["fk_supplier_price_expression"];
 				$prodfourn->supplier_reputation    = $record["supplier_reputation"];
+				$prodfourn->date_creation          = $this->db->jdate($record['datec']);
+				$prodfourn->date_modification      = $this->db->jdate($record['tms']);
 
                 $prodfourn->fourn_multicurrency_price       = $record["multicurrency_price"];
                 $prodfourn->fourn_multicurrency_unitprice   = $record["multicurrency_unitprice"];
@@ -630,6 +645,7 @@ class ProductFournisseur extends Product
         }
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *  Load properties for minimum price
      *
@@ -638,9 +654,9 @@ class ProductFournisseur extends Product
      *  @param	int		$socid		get min price for specific supplier
      *  @return int					<0 if KO, 0=Not found of no product id provided, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function find_min_price_product_fournisseur($prodid, $qty=0, $socid=0)
     {
+        // phpcs:enable
         global $conf;
 
         if (empty($prodid))
@@ -818,6 +834,7 @@ class ProductFournisseur extends Product
         return $thirdparty->getNomUrl($withpicto,$option,$maxlen,$notooltip);
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *	Display price of product
      *
@@ -829,9 +846,9 @@ class ProductFournisseur extends Product
      *                                    to display in table format.
      *  @return string                    String with supplier price
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function display_price_product_fournisseur($showunitprice=1,$showsuptitle=1,$maxlen=0,$notooltip=0, $productFournList=array())
     {
+        // phpcs:enable
         global $langs;
 
         $out = '';

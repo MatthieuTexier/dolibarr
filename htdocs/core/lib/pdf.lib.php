@@ -2,7 +2,7 @@
 /* Copyright (C) 2006-2017	Laurent Destailleur 	<eldy@users.sourceforge.net>
  * Copyright (C) 2006		Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2007		Patrick Raguin      	<patrick.raguin@gmail.com>
- * Copyright (C) 2010-2012	Regis Houssin       	<regis.houssin@capnetworks.com>
+ * Copyright (C) 2010-2012	Regis Houssin       	<regis.houssin@inodbox.com>
  * Copyright (C) 2010-2017	Juanjo Menent       	<jmenent@2byte.es>
  * Copyright (C) 2012		Christophe Battarel		<christophe.battarel@altairis.fr>
  * Copyright (C) 2012       Cédric Salvador         <csalvador@gpcsolutions.fr>
@@ -261,9 +261,9 @@ function pdf_getHeightForLogo($logo, $url = false)
 /**
  * Function to try to calculate height of a HTML Content
  *
- * @param TCPDF     $pdf            PDF initialized object
- * @param string    $htmlcontent    HTML Contect
- * @return number
+ * @param 	TCPDF     $pdf				PDF initialized object
+ * @param 	string    $htmlcontent		HTML Contect
+ * @return 	int							Height
  * @see getStringHeight
  */
 function pdfGetHeightForHtmlContent(&$pdf, $htmlcontent)
@@ -445,9 +445,18 @@ function pdf_build_address($outputlangs,$sourcecompany,$targetcompany='',$target
 
     			if (!empty($targetcontact->address)) {
     				$stringaddress .= ($stringaddress ? "\n" : '' ).$outputlangs->convToOutputCharset(dol_format_address($targetcontact));
-    			}else {
-    				$stringaddress .= ($stringaddress ? "\n" : '' ).$outputlangs->convToOutputCharset(dol_format_address($targetcompany));
-    			}
+    			} else {
+    				$companytouseforaddress = $targetcompany;
+
+					// Contact on a thirdparty that is a different thirdparty than the thirdparty of object
+					if ($targetcontact->socid > 0 && $targetcontact->socid != $targetcompany->id)
+					{
+						$targetcontact->fetch_thirdparty();
+						$companytouseforaddress = $targetcontact->thirdparty;
+					}
+
+					$stringaddress .= ($stringaddress ? "\n" : '' ).$outputlangs->convToOutputCharset(dol_format_address($companytouseforaddress));
+				}
     			// Country
     			if (!empty($targetcontact->country_code) && $targetcontact->country_code != $sourcecompany->country_code) {
     				$stringaddress.= ($stringaddress ? "\n" : '' ).$outputlangs->convToOutputCharset($outputlangs->transnoentitiesnoconv("Country".$targetcontact->country_code));
@@ -748,7 +757,7 @@ function pdf_bank(&$pdf,$outputlangs,$curx,$cury,$account,$onlynumber=0,$default
 					$content = $account->number;
 				} elseif ($val == 'BankAccountNumberKey') {
 					// Key
-					$tmplength = 13;
+					$tmplength = 15;
 					$content = $account->cle_rib;
 				}elseif ($val == 'IBAN' || $val == 'BIC') {
 					// Key
@@ -1386,7 +1395,7 @@ function pdf_getlinedesc($object,$i,$outputlangs,$hideref=0,$hidedesc=0,$issuppl
 			if ($detail->eatby) $dte[]=$outputlangs->transnoentitiesnoconv('printEatby',dol_print_date($detail->eatby, $format, false, $outputlangs));
 			if ($detail->sellby) $dte[]=$outputlangs->transnoentitiesnoconv('printSellby',dol_print_date($detail->sellby, $format, false, $outputlangs));
 			if ($detail->batch) $dte[]=$outputlangs->transnoentitiesnoconv('printBatch',$detail->batch);
-			$dte[]=$outputlangs->transnoentitiesnoconv('printQty',$detail->dluo_qty);
+			$dte[]=$outputlangs->transnoentitiesnoconv('printQty',$detail->qty);
 			$libelleproduitservice.= "__N__  ".implode(" - ", $dte);
 		}
 	}
@@ -1505,7 +1514,7 @@ function pdf_getlineref_supplier($object,$i,$outputlangs,$hidedetails=0)
  *  @param	int			$hidedetails		Hide details (0=no, 1=yes, 2=just special lines)
  * 	@return	string
  */
-function pdf_getlinevatrate($object,$i,$outputlangs,$hidedetails=0)
+function pdf_getlinevatrate($object, $i, $outputlangs, $hidedetails=0)
 {
 	global $conf, $hookmanager, $mysoc;
 
@@ -1859,6 +1868,7 @@ function pdf_getlineremisepercent($object,$i,$outputlangs,$hidedetails=0)
 function pdf_getlineprogress($object, $i, $outputlangs, $hidedetails = 0, $hookmanager = null)
 {
 	if (empty($hookmanager)) global $hookmanager;
+	global $conf;
 
 	$reshook=0;
     $result='';
@@ -2096,8 +2106,8 @@ function pdf_getLinkedObjects($object,$outputlangs)
 		}
 		else if ($objecttype == 'shipping')
 		{
-			$outputlangs->load('orders');
-			$outputlangs->load('sendings');
+			$outputlangs->loadLangs(array("orders", "sendings"));
+
 			foreach($objects as $x => $elementobject)
 			{
 			    $order=null;

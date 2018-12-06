@@ -38,6 +38,9 @@ class Stripe extends CommonObject
 	 */
     public $fk_soc;
 
+    /**
+     * @var int ID
+     */
 	public $fk_key;
 
 	/**
@@ -119,8 +122,6 @@ class Stripe extends CommonObject
 	 */
 	public function getStripeCustomerAccount($id, $status=0)
 	{
-		global $conf;
-
 		include_once DOL_DOCUMENT_ROOT.'/societe/class/societeaccount.class.php';
 		$societeaccount = new SocieteAccount($this->db);
 		return $societeaccount->getCustomerAccount($id, 'stripe', $status);		// Get thirdparty cus_...
@@ -186,10 +187,21 @@ class Stripe extends CommonObject
 			{
 				$dataforcustomer = array(
 					"email" => $object->email,
-					"business_vat_id" => $object->tva_intra,
 					"description" => $object->name,
 					"metadata" => array('dol_id'=>$object->id, 'dol_version'=>DOL_VERSION, 'dol_entity'=>$conf->entity, 'ipaddress'=>(empty($_SERVER['REMOTE_ADDR'])?'':$_SERVER['REMOTE_ADDR']))
 				);
+
+				$vatcleaned = $object->tva_intra ? $object->tva_intra : null;
+
+				$taxinfo = array('type'=>'vat');
+				if ($vatcleaned)
+				{
+					$taxinfo["tax_id"] = $vatcleaned;
+				}
+				// We force data to "null" if not defined as expected by Stripe
+				if (empty($vatcleaned)) $taxinfo=null;
+
+				$dataforcustomer["tax_info"] = $taxinfo;
 
 				//$a = \Stripe\Stripe::getApiKey();
 				//var_dump($a);var_dump($key);exit;
@@ -272,7 +284,6 @@ class Stripe extends CommonObject
 						$this->error = $e->getMessage();
 						dol_syslog($this->error, LOG_WARNING);
 					}
-
 				}
 				elseif ($createifnotlinkedtostripe)
 				{
@@ -335,18 +346,19 @@ class Stripe extends CommonObject
 	/**
 	 * Create charge with public/payment/newpayment.php, stripe/card.php, cronjobs or REST API
 	 *
-	 * @param int 		$amount									Amount to pay
-	 * @param string 	$currency								EUR, GPB...
-	 * @param string 	$origin									Object type to pay (order, invoice, contract...)
-	 * @param int 		$item									Object id to pay
-	 * @param string 	$source									src_xxxxx or card_xxxxx
-	 * @param string 	$customer								Stripe customer ref 'cus_xxxxxxxxxxxxx' via customerStripe()
-	 * @param string 	$account								Stripe account ref 'acc_xxxxxxxxxxxxx' via  getStripeAccount()
+	 * @param	int 	$amount									Amount to pay
+	 * @param	string 	$currency								EUR, GPB...
+	 * @param	string 	$origin									Object type to pay (order, invoice, contract...)
+	 * @param	int 	$item									Object id to pay
+	 * @param	string 	$source									src_xxxxx or card_xxxxx
+	 * @param	string 	$customer								Stripe customer ref 'cus_xxxxxxxxxxxxx' via customerStripe()
+	 * @param	string 	$account								Stripe account ref 'acc_xxxxxxxxxxxxx' via  getStripeAccount()
 	 * @param	int		$status									Status (0=test, 1=live)
 	 * @param	int		$usethirdpartyemailforreceiptemail		Use thirdparty email as receipt email
+	 * @param	boolean	$capture								Set capture flag to true (take payment) or false (wait)
 	 * @return Stripe
 	 */
-	public function createPaymentStripe($amount, $currency, $origin, $item, $source, $customer, $account, $status=0, $usethirdpartyemailforreceiptemail=0)
+	public function createPaymentStripe($amount, $currency, $origin, $item, $source, $customer, $account, $status=0, $usethirdpartyemailforreceiptemail=0, $capture=true)
 	{
 		global $conf;
 
@@ -417,9 +429,9 @@ class Stripe extends CommonObject
 					$charge = \Stripe\Charge::create(array(
 						"amount" => "$stripeamount",
 						"currency" => "$currency",
-                                                "capture"  => true,
 						"statement_descriptor" => dol_trunc(dol_trunc(dol_string_unaccent($mysoc->name), 8, 'right', 'UTF-8', 1).' '.$description, 22, 'right', 'UTF-8', 1),     // 22 chars that appears on bank receipt
- 					        "description" => "Stripe payment: ".$description,
+						"description" => "Stripe payment: ".$description,
+						"capture"  => $capture,
 						"metadata" => $metadata,
 						"source" => "$source"
 					));
@@ -427,9 +439,9 @@ class Stripe extends CommonObject
 					$paymentarray = array(
 						"amount" => "$stripeamount",
 						"currency" => "$currency",
-                                                "capture"  => true,
-					        "statement_descriptor" => dol_trunc(dol_trunc(dol_string_unaccent($mysoc->name), 8, 'right', 'UTF-8', 1).' '.$description, 22, 'right', 'UTF-8', 1),     // 22 chars that appears on bank receipt
-					        "description" => "Stripe payment: ".$description,
+						"statement_descriptor" => dol_trunc(dol_trunc(dol_string_unaccent($mysoc->name), 8, 'right', 'UTF-8', 1).' '.$description, 22, 'right', 'UTF-8', 1),     // 22 chars that appears on bank receipt
+						"description" => "Stripe payment: ".$description,
+						"capture"  => $capture,
 						"metadata" => $metadata,
 						"source" => "$source",
 						"customer" => "$customer"
@@ -452,9 +464,9 @@ class Stripe extends CommonObject
         		$paymentarray = array(
 						"amount" => "$stripeamount",
 						"currency" => "$currency",
-                                                "capture"  => true,
 						"statement_descriptor" => dol_trunc(dol_trunc(dol_string_unaccent($mysoc->name), 8, 'right', 'UTF-8', 1).' '.$description, 22, 'right', 'UTF-8', 1),     // 22 chars that appears on bank receipt
-					        "description" => "Stripe payment: ".$description,
+						"description" => "Stripe payment: ".$description,
+						"capture"  => $capture,
 						"metadata" => $metadata,
 						"source" => "$source",
 						"customer" => "$customer"

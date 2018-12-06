@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2003-2006 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2006-2014 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2015		Charles-Fr BENKE  	 <charles.fr@benke.fr>
+ * Copyright (C) 2015-2018 Charlene BENKE  	<charlie@patas-monkey.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ class pdf_paiement
 	function __construct($db)
 	{
 		global $langs,$conf;
-		$langs->load("bills");
-		$langs->load("compta");
-		$langs->load("main");
+
+		// Load translation files required by the page
+        $langs->loadLangs(array("bills","compta","main"));
 
 		$this->db = $db;
 		$this->description = $langs->transnoentities("ListOfCustomerPayments");
@@ -83,6 +83,7 @@ class pdf_paiement
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Fonction generant la rapport sur le disque
 	 *
@@ -92,9 +93,9 @@ class pdf_paiement
 	 *	@param	string	$outputlangs	Lang output object
 	 *	@return	int						<0 if KO, >0 if OK
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function write_file($_dir, $month, $year, $outputlangs)
 	{
+        // phpcs:enable
 		include_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 
 		global $conf, $hookmanager, $langs, $user;
@@ -345,7 +346,7 @@ class pdf_paiement
 	 */
 	function _pagehead(&$pdf, $page, $showaddress, $outputlangs)
 	{
-		global $langs;
+		global $langs, $conf;
 
 		// Do not add the BACKGROUND as this is a report
 		//pdf_pagehead($pdf,$outputlangs,$this->page_hauteur);
@@ -406,6 +407,7 @@ class pdf_paiement
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Output body
 	 *
@@ -415,9 +417,9 @@ class pdf_paiement
 	 *	@param	Translate	$outputlangs	Object langs
 	 *	@return	void
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function Body(&$pdf, $page, $lines, $outputlangs)
 	{
+        // phpcs:enable
 		global $langs;
 		$default_font_size = pdf_getPDFFontSize($outputlangs);
 

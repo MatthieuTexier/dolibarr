@@ -1,11 +1,12 @@
 <?php
-/* Copyright (C) 2002-2003 Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2002-2003 Jean-Louis Bergamo   <jlb@j1b.org>
- * Copyright (C) 2004-2013 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2004      Sebastien Di Cintio  <sdicintio@ressource-toi.org>
- * Copyright (C) 2004      Benoit Mortier       <benoit.mortier@opensides.be>
- * Copyright (C) 2009      Regis Houssin        <regis.houssin@capnetworks.com>
- * Copyright (C) 2012      Marcos García        <marcosgdf@gmail.com>
+/* Copyright (C) 2002-2003  Rodolphe Quiedeville    <rodolphe@quiedeville.org>
+ * Copyright (C) 2002-2003  Jean-Louis Bergamo      <jlb@j1b.org>
+ * Copyright (C) 2004-2013  Laurent Destailleur     <eldy@users.sourceforge.net>
+ * Copyright (C) 2004       Sebastien Di Cintio     <sdicintio@ressource-toi.org>
+ * Copyright (C) 2004       Benoit Mortier          <benoit.mortier@opensides.be>
+ * Copyright (C) 2009       Regis Houssin           <regis.houssin@inodbox.com>
+ * Copyright (C) 2012       Marcos García           <marcosgdf@gmail.com>
+ * Copyright (C) 2018       Frédéric France         <frederic.france@netlogic.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,16 +43,21 @@ class MailmanSpip
      * @var DoliDB Database handler.
      */
     public $db;
-    
+
     /**
 	 * @var string Error code (or message)
 	 */
 	public $error='';
 
-    var $mladded_ok;
-    var $mladded_ko;
-    var $mlremoved_ok;
-    var $mlremoved_ko;
+    /**
+     * @var string[]	Array of error strings
+     */
+    public $errors = array();
+
+    public $mladded_ok;
+    public $mladded_ko;
+    public $mlremoved_ok;
+    public $mlremoved_ko;
 
 
     /**
@@ -170,15 +176,16 @@ class MailmanSpip
         return $result;
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *  Fonction qui donne les droits redacteurs dans spip
      *
      *	@param	Adherent	$object		Object with data (->firstname, ->lastname, ->email and ->login)
      *  @return	int					=0 if KO, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function add_to_spip($object)
     {
+        // phpcs:enable
         dol_syslog(get_class($this)."::add_to_spip");
 
         if ($this->isSpipEnabled())
@@ -213,15 +220,16 @@ class MailmanSpip
         return 0;
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *  Fonction qui enleve les droits redacteurs dans spip
      *
      *	@param	Adherent	$object		Object with data (->login)
      *  @return	int					=0 if KO, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function del_to_spip($object)
     {
+        // phpcs:enable
         dol_syslog(get_class($this)."::del_to_spip");
 
         if ($this->isSpipEnabled())
@@ -253,15 +261,16 @@ class MailmanSpip
         return 0;
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *  Fonction qui dit si cet utilisateur est un redacteur existant dans spip
      *
      *	@param	object	$object		Object with data (->login)
      *  @return int     			1=exists, 0=does not exists, -1=error
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function is_in_spip($object)
     {
+        // phpcs:enable
         if ($this->isSpipEnabled())
         {
             if ($this->checkSpipConfig())
@@ -304,6 +313,7 @@ class MailmanSpip
         return -1;
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *  Subscribe an email to all mailing-lists
      *
@@ -311,9 +321,9 @@ class MailmanSpip
      *  @param	array	$listes    	To force mailing-list (string separated with ,)
      *  @return	int		  			<0 if KO, >=0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function add_to_mailman($object,$listes='')
     {
+        // phpcs:enable
         global $conf,$langs,$user;
 
         dol_syslog(get_class($this)."::add_to_mailman");
@@ -376,6 +386,7 @@ class MailmanSpip
         }
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *  Unsubscribe an email from all mailing-lists
      *  Used when a user is resiliated
@@ -384,9 +395,9 @@ class MailmanSpip
      *  @param	array	$listes     To force mailing-list (string separated with ,)
      *  @return int         		<0 if KO, >=0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function del_to_mailman($object,$listes='')
     {
+        // phpcs:enable
         global $conf,$langs,$user;
 
         dol_syslog(get_class($this)."::del_to_mailman");

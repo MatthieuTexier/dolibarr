@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2005      Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2005-2009 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2009 Regis Houssin        <regis.houssin@inodbox.com>
  * Copyright (C) 2010-2013 Juanjo Menent        <jmenent@2byte.es>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,7 @@ class RejetPrelevement
 	 * @var int ID
 	 */
 	public $id;
-	
+
 	/**
      * @var DoliDB Database handler.
      */
@@ -175,7 +175,6 @@ class RejetPrelevement
 					$error++;
 					dol_syslog("RejetPrelevement::Create Error payment validation");
 				}
-
 			}
 			//Tag invoice as unpaid
 			dol_syslog("RejetPrelevement::Create set_unpaid fac ".$fac->ref);
@@ -199,15 +198,16 @@ class RejetPrelevement
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Send email to all users that has asked the withdraw request
 	 *
 	 * 	@param	Facture		$fac			Invoice object
 	 * 	@return	void
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function _send_email($fac)
 	{
+        // phpcs:enable
 		global $langs;
 
 		$userid = 0;

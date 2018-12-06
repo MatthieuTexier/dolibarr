@@ -62,15 +62,16 @@ $securitykey = GETPOST('securitykey','alpha');
 
 $diroutputmassaction=$conf->cronjob->dir_output . '/temp/massgeneration/'.$user->id;
 
+$object = new Cronjob($db);
+
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('cronjoblist'));
 $extrafields = new ExtraFields($db);
 
 // fetch optionals attributes and labels
 $extralabels = $extrafields->fetch_name_optionals_label('cronjob');
-$search_array_options=$extrafields->getOptionalsFromPost($extralabels,'','search_');
+$search_array_options=$extrafields->getOptionalsFromPost($object->table_element,'','search_');
 
-$object = new Cronjob($db);
 
 
 /*
@@ -191,7 +192,7 @@ if (empty($reshook))
 				$result = 0;
 				if ($massaction == 'disable') $result = $tmpcron->setStatut(Cronjob::STATUS_DISABLED);
 				elseif ($massaction == 'enable') $result = $tmpcron->setStatut(Cronjob::STATUS_ENABLED);
-				else dol_print_error($db, 'Bad value for massaction');
+				//else dol_print_error($db, 'Bad value for massaction');
 				if ($result < 0) setEventMessages($tmpcron->error, $tmpcron->errors, 'errors');
 			}
 			else
@@ -242,6 +243,7 @@ $sql.= " t.status,";
 $sql.= " t.fk_user_author,";
 $sql.= " t.fk_user_mod,";
 $sql.= " t.note,";
+$sql.= " t.maxrun,";
 $sql.= " t.nbrun,";
 $sql.= " t.libname,";
 $sql.= " t.test";
@@ -252,12 +254,12 @@ if ($search_status == 2) $sql.= " AND t.status = 2";
 //Manage filter
 if (is_array($filter) && count($filter)>0) {
 	foreach($filter as $key => $value) {
-		$sql.= ' AND '.$key.' LIKE \'%'.$value.'%\'';
+		$sql.= ' AND '.$key.' LIKE \'%'.$db->escape($value).'%\'';
 	}
 }
 $sqlwhere = array();
 if (!empty($module_name)) {
-	$sqlwhere[]='(t.module_name='.$module_name.')';
+	$sqlwhere[]='(t.module_name='.$db->escape($module_name).')';
 }
 if (count($sqlwhere)>0) {
 	$sql.= " WHERE ".implode(' AND ',$sqlwhere);
@@ -519,9 +521,15 @@ if ($num > 0)
 		print '</td>';
 
 		print '<td class="center">';
-		if(!empty($obj->datenextrun)) {
+		if (!empty($obj->datenextrun)) {
+			$datenextrun = $db->jdate($obj->datenextrun);
 			if (empty($obj->status)) print '<span class="opacitymedium">';
-			print dol_print_date($db->jdate($obj->datenextrun),'dayhour');
+			print dol_print_date($datenextrun,'dayhoursec');
+			if ($obj->status == Cronjob::STATUS_ENABLED)
+			{
+				if ($obj->maxrun && $obj->nbrun >= $obj->maxrun) print img_warning($langs->trans("MaxRunReached"));
+				elseif ($datenextrun && $datenextrun < $now) print img_warning($langs->trans("Late"));
+			}
 			if (empty($obj->status)) print '</span>';
 		}
 		print '</td>';

@@ -47,7 +47,12 @@ class Dolresource extends CommonObject
 	public $element_type;
 	public $busy;
 	public $mandatory;
+
+	/**
+     * @var int ID
+     */
 	public $fk_user_create;
+
 	public $type_label;
 	public $tms='';
 
@@ -61,7 +66,6 @@ class Dolresource extends CommonObject
     function __construct($db)
     {
         $this->db = $db;
-        return 1;
     }
 
     /**
@@ -333,15 +337,16 @@ class Dolresource extends CommonObject
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *    Load object in memory from database
      *
      *    @param      int	$id          id object
      *    @return     int         <0 if KO, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function fetch_element_resource($id)
     {
+        // phpcs:enable
     	global $langs;
     	$sql = "SELECT";
     	$sql.= " t.rowid,";
@@ -379,7 +384,6 @@ class Dolresource extends CommonObject
 				if($obj->element_id && $obj->element_type) {
 					$this->objelement = fetchObjectByElement($obj->element_id,$obj->element_type);
 				}
-
     		}
     		$this->db->free($resql);
 
@@ -478,6 +482,7 @@ class Dolresource extends CommonObject
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *	Load resource objects into $this->lines
      *
@@ -488,9 +493,9 @@ class Dolresource extends CommonObject
      *  @param	array		$filter    	  filter output
      *  @return int          	<0 if KO, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function fetch_all($sortorder, $sortfield, $limit, $offset, $filter='')
     {
+        // phpcs:enable
     	global $conf;
     	$sql="SELECT ";
     	$sql.= " t.rowid,";
@@ -574,6 +579,7 @@ class Dolresource extends CommonObject
     	}
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
      /**
      *	Load all objects into $this->lines
      *
@@ -584,9 +590,9 @@ class Dolresource extends CommonObject
 	 *  @param	array		$filter    	  filter output
 	 *  @return int          	<0 if KO, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function fetch_all_resources($sortorder, $sortfield, $limit, $offset, $filter='')
     {
+        // phpcs:enable
    		global $conf;
    		$sql="SELECT ";
    		$sql.= " t.rowid,";
@@ -639,7 +645,6 @@ class Dolresource extends CommonObject
 					if($obj->element_id && $obj->element_type)
 						$line->objelement = fetchObjectByElement($obj->element_id,$obj->element_type);
         			$this->lines[] = $line;
-
    				}
    				$this->db->free($resql);
    			}
@@ -652,6 +657,7 @@ class Dolresource extends CommonObject
    		}
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *	Load all objects into $this->lines
      *
@@ -662,9 +668,9 @@ class Dolresource extends CommonObject
      *  @param	array		$filter    	  filter output
      *  @return int          	<0 if KO, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function fetch_all_used($sortorder, $sortfield, $limit, $offset=1, $filter='')
     {
+        // phpcs:enable
     	global $conf;
 
     	if ( ! $sortorder) $sortorder="ASC";
@@ -730,6 +736,7 @@ class Dolresource extends CommonObject
     	}
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      * Fetch all resources available, declared by modules
      * Load available resource in array $this->available_resources
@@ -738,9 +745,9 @@ class Dolresource extends CommonObject
      * @deprecated, remplaced by hook getElementResources
      * @see getElementResources()
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function fetch_all_available()
     {
+        // phpcs:enable
     	global $conf;
 
     	if (! empty($conf->modules_parts['resources']))
@@ -752,6 +759,7 @@ class Dolresource extends CommonObject
     	return 0;
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *  Update element resource into database
      *
@@ -759,9 +767,9 @@ class Dolresource extends CommonObject
      *  @param  int		$notrigger	 0=launch triggers after, 1=disable triggers
      *  @return int     		   	 <0 if KO, >0 if OK
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function update_element_resource($user=null, $notrigger=0)
     {
+        // phpcs:enable
     	global $conf, $langs;
 		$error=0;
 
@@ -880,14 +888,15 @@ class Dolresource extends CommonObject
     }
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *      Load in cache resource type code (setup in dictionary)
      *
      *      @return     int             Nb lignes chargees, 0 si deja chargees, <0 si ko
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     function load_cache_code_type_resource()
     {
+        // phpcs:enable
     	global $langs;
 
     	if (count($this->cache_code_type_resource)) return 0;    // Cache deja charge
@@ -967,6 +976,7 @@ class Dolresource extends CommonObject
         return $this->LibStatut($this->status,$mode);
     }
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     /**
      *  Return the status
      *
@@ -974,9 +984,9 @@ class Dolresource extends CommonObject
      *  @param  int		$mode          	0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 5=Long label + Picto
      *  @return string 			       	Label of status
      */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
     static function LibStatut($status,$mode=0)
     {
+        // phpcs:enable
         global $langs;
 
         return '';

@@ -41,7 +41,11 @@ class AccountingJournal extends CommonObject
 	 */
 	public $fk_element = '';
 
-	public $ismultientitymanaged = 0;	// 0=No test on entity, 1=Test with field entity, 2=Test with link by societe
+	/**
+	 * 0=No test on entity, 1=Test with field entity, 2=Test with link by societe
+	 * @var int
+	 */
+	public $ismultientitymanaged = 0;
 
 	/**
 	 * @var string String with name of icon for myobject. Must be the part after the 'object_' into object_myobject.png
@@ -271,6 +275,7 @@ class AccountingJournal extends CommonObject
 		return $this->LibType($this->nature,$mode);
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Return type of an accounting journal
 	 *
@@ -278,9 +283,9 @@ class AccountingJournal extends CommonObject
 	 *  @param  int		$mode		  	0=libelle long, 1=libelle court
 	 *  @return string 				   	Label of type
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function LibType($nature,$mode=0)
 	{
+        // phpcs:enable
 		global $langs;
 
 		$langs->loadLangs(array("accountancy"));

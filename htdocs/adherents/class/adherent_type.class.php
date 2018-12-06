@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2002		Rodolphe Quiedeville		<rodolphe@quiedeville.org>
  * Copyright (C) 2004-2008	Laurent Destailleur		<eldy@users.sourceforge.net>
- * Copyright (C) 2009-2017	Regis Houssin			<regis.houssin@capnetworks.com>
+ * Copyright (C) 2009-2017	Regis Houssin			<regis.houssin@inodbox.com>
  * Copyright (C) 2016		Charlie Benke			<charlie@patas-monkey.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -47,7 +47,11 @@ class AdherentType extends CommonObject
 	 */
 	public $picto = 'group';
 
-	public $ismultientitymanaged = 1;  // 0=No test on entity, 1=Test with field entity, 2=Test with link by societe
+	/**
+	 * 0=No test on entity, 1=Test with field entity, 2=Test with link by societe
+	 * @var int
+	 */
+	public $ismultientitymanaged = 1;
 
 	/**
 	 * @var string
@@ -56,8 +60,10 @@ class AdherentType extends CommonObject
 	 */
 	public $libelle;
 
-	/** @var string Label */
-	public $label;
+	/**
+     * @var string Adherent type label
+     */
+    public $label;
 
 	/**
 	 * @var int Subsription required (0 or 1)
@@ -300,14 +306,15 @@ class AdherentType extends CommonObject
 		}
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Return list of members' type
 	 *
 	 *  @return 	array	List of types of members
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function liste_array()
 	{
+        // phpcs:enable
 		global $conf,$langs;
 
 		$adherenttypes = array();
@@ -432,6 +439,7 @@ class AdherentType extends CommonObject
 		return '';
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Retourne chaine DN complete dans l'annuaire LDAP pour l'objet
 	 *
@@ -441,9 +449,9 @@ class AdherentType extends CommonObject
 	 *									2=Return key only (uid=qqq)
 	 *	@return		string				DN
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function _load_ldap_dn($info,$mode=0)
 	{
+        // phpcs:enable
 		global $conf;
 		$dn='';
 		if ($mode==0) $dn=$conf->global->LDAP_KEY_MEMBERS_TYPES."=".$info[$conf->global->LDAP_KEY_MEMBERS_TYPES].",".$conf->global->LDAP_MEMBER_TYPE_DN;
@@ -453,14 +461,15 @@ class AdherentType extends CommonObject
 	}
 
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *	Initialize the info array (array of LDAP values) that will be used to call LDAP functions
 	 *
 	 *	@return		array		Tableau info des attributs
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function _load_ldap_info()
 	{
+        // phpcs:enable
 		global $conf,$langs;
 
 		$info=array();

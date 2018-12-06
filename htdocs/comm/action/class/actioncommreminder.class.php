@@ -81,7 +81,12 @@ class ActionCommReminder extends CommonObject
 		'offsetunit' => array('type'=>'varchar(1)', 'label'=>'OffsetUnit', 'visible'=>1, 'enabled'=>1, 'position'=>57, 'notnull'=>1, 'comment'=>"m, h, d, w",),
 		'status' => array('type'=>'integer', 'label'=>'Status', 'visible'=>1, 'enabled'=>1, 'position'=>1000, 'notnull'=>1, 'default'=>0, 'index'=>0, 'arrayofkeyval'=>array('0'=>'ToDo', '1'=>'Done')),
 	);
+
+	/**
+	 * @var int ID
+	 */
 	public $rowid;
+
 	public $dateremind;
 	public $typeremind;
 
@@ -92,7 +97,12 @@ class ActionCommReminder extends CommonObject
 
 	public $offsetvalue;
 	public $offsetunit;
+
+	/**
+	 * @var int Status
+	 */
 	public $status;
+
 	// END MODULEBUILDER PROPERTIES
 
 
@@ -173,6 +183,7 @@ class ActionCommReminder extends CommonObject
 		return $this->LibStatut($this->status,$mode);
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Return the status
 	 *
@@ -180,40 +191,40 @@ class ActionCommReminder extends CommonObject
 	 *  @param  int		$mode          	0=long label, 1=short label, 2=Picto + short label, 3=Picto, 4=Picto + long label, 5=Short label + Picto, 6=Long label + Picto
 	 *  @return string 			       	Label of status
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	static function LibStatut($status,$mode=0)
 	{
+        // phpcs:enable
 		global $langs;
 
 		if ($mode == 0 || $mode == 1)
 		{
 			if ($status == 1) return $langs->trans('Done');
-			if ($status == 0) return $langs->trans('ToDo');
+			elseif ($status == 0) return $langs->trans('ToDo');
 		}
 		elseif ($mode == 2)
 		{
 			if ($status == 1) return img_picto($langs->trans('Done'),'statut4').' '.$langs->trans('Done');
-			if ($status == 0) return img_picto($langs->trans('ToDo'),'statut5').' '.$langs->trans('ToDo');
+			elseif ($status == 0) return img_picto($langs->trans('ToDo'),'statut5').' '.$langs->trans('ToDo');
 		}
 		elseif ($mode == 3)
 		{
 			if ($status == 1) return img_picto($langs->trans('Done'),'statut4');
-			if ($status == 0) return img_picto($langs->trans('ToDo'),'statut5');
+			elseif ($status == 0) return img_picto($langs->trans('ToDo'),'statut5');
 		}
 		elseif ($mode == 4)
 		{
 			if ($status == 1) return img_picto($langs->trans('Done'),'statut4').' '.$langs->trans('Done');
-			if ($status == 0) return img_picto($langs->trans('ToDo'),'statut5').' '.$langs->trans('ToDo');
+			elseif ($status == 0) return img_picto($langs->trans('ToDo'),'statut5').' '.$langs->trans('ToDo');
 		}
 		elseif ($mode == 5)
 		{
 			if ($status == 1) return $langs->trans('Done').' '.img_picto($langs->trans('Done'),'statut4');
-			if ($status == 0) return $langs->trans('ToDo').' '.img_picto($langs->trans('ToDo'),'statut5');
+			elseif ($status == 0) return $langs->trans('ToDo').' '.img_picto($langs->trans('ToDo'),'statut5');
 		}
 		elseif ($mode == 6)
 		{
 			if ($status == 1) return $langs->trans('Done').' '.img_picto($langs->trans('Done'),'statut4');
-			if ($status == 0) return $langs->trans('ToDo').' '.img_picto($langs->trans('ToDo'),'statut5');
+			elseif ($status == 0) return $langs->trans('ToDo').' '.img_picto($langs->trans('ToDo'),'statut5');
 		}
 	}
 

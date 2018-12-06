@@ -51,8 +51,17 @@ class Subscription extends CommonObject
 	public $datem;				// Date modification
 	public $dateh;				// Subscription start date (date subscription)
 	public $datef;				// Subscription end date
+
+	/**
+     * @var int ID
+     */
 	public $fk_adherent;
+
 	public $amount;
+
+	/**
+     * @var int ID
+     */
 	public $fk_bank;
 
 
@@ -366,15 +375,16 @@ class Subscription extends CommonObject
 	    return '';
 	}
 
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	/**
 	 *  Renvoi le libelle d'un statut donne
 	 *
 	 *  @param	int			$statut      			Id statut
 	 *  @return string      						Label
 	 */
-    // phpcs:ignore PEAR.NamingConventions.ValidFunctionName.NotCamelCaps
 	function LibStatut($statut)
 	{
+        // phpcs:enable
 	    global $langs;
 	    $langs->load("members");
 	    return '';
@@ -406,7 +416,6 @@ class Subscription extends CommonObject
 			}
 
 			$this->db->free($result);
-
 		}
 		else
 		{
